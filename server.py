@@ -13,13 +13,14 @@ class chat_server():
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.accept_process = ""
         self.broadcast_process = ""
+        self.hosts_number = 0
         with open("last_msg.data.Blue","w") as f:
             f.close()
 
 
     #starts the server and launch the process to accept connections
     def start_server(self):
-        self.hosts = Manager().list()
+        self.hosts_number = Manager().Value('i',0)
         self.sock.bind(('127.0.0.1', self.port))
         self.accept_process = Process(target = self.accept_hosts)
         self.accept_process.start()
@@ -32,26 +33,28 @@ class chat_server():
         self.sock.listen(self.max_hosts)
         while True:
             client, address = self.sock.accept()
-            self.hosts.append(address[0])
-            self.broadcast_process = Process(target = self.broadcast, args = (client,len(self.hosts)))
+            self.hosts_number.value += 1
+            self.broadcast_process = Process(target = self.broadcast, args = (client,self.hosts_number))
             self.broadcast_process.start()
             print("[+]user connected :: addr : {} hostname : {}".format(address[0],socket.gethostbyaddr(address[0])[0]))
-            print("[!]Users are now {}/{}".format(len(self.hosts),self.max_hosts))
+            print("[!]Users are now {}/{}".format(self.hosts_number.value,self.max_hosts))
 
 
     #recieve and send the messages
     def broadcast(self,client,client_pos):
         while True:
-            if len(self.hosts) >= 1:
+            if self.hosts_number.value >= 1:
                 with open("last_msg.data.Blue","r") as f:
                     try:
                         client.send(bytes(f.read(),'utf-8'))
                         f.close()
                     except:
-                        #exit if the user is dsconnected and remove a
-                        self.hosts.pop(client_pos-1)
-                        print("[x]Host number {} as left the chat".format(client_pos))
+                        #exit if the user is dsconnected and remove it from the count
+                        print("[x]Host number {} as left the chat".format(client_pos.value))
+                        self.hosts_number.value -= 1
+                        print("[!]Users are now {}/{}".format(self.hosts_number.value,self.max_hosts))
                         exit(1)
+                        
 
                 try:
                     message = client.recv(1024)
@@ -69,4 +72,4 @@ class chat_server():
         self.broadcast_process.terminate()
         self.accept_process.terminate()
         os.remove("last_msg.data.Blue")
-       
+     
