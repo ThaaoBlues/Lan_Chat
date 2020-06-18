@@ -59,10 +59,14 @@ class chat_server():
                 try:
                     message = client.recv(1024)
                     if message != "":
-                        print(message.decode('utf-8'))
-                        with open("last_msg.data.Blue","a") as f:
-                            f.write("{}\n".format(message.decode('utf-8')))
-                            f.close()
+                       if "[REFRESH FLAG]" in message.decode('utf-8'):
+                            print(message.decode('utf-8'))
+
+                        else :
+                            print(message.decode('utf-8'))
+                            with open("last_msg.data.Blue","a") as f:
+                                f.write("{}\n".format(message.decode('utf-8')))
+                                f.close()
                     
                 except:
                     pass
