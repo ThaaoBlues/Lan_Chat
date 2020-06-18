@@ -50,5 +50,5 @@ class chat_client():
             if message != "" and message != "\n" and message != None and message.strip() != False:
                 self.sock.send(bytes(str(self.username+" : "+message),'utf-8'))
         except:
-            print("Error in message sending...")
+            print("Error in message sending, the server may be offline...")
 
