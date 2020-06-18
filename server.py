@@ -27,25 +27,31 @@ class chat_server():
         self.accept_process.join()
         
 
-    #funtion of the process accept_hosts_process to...yeah it's accepting hosts while the server is runnig and
+    #funtion of the process accept_hosts_process to...yeah it's accepting hosts while the server is running
     def accept_hosts(self):
         self.sock.listen(self.max_hosts)
         while True:
             client, address = self.sock.accept()
-            self.broadcast_process = Process(target = self.broadcast, args = (client,))
+            self.hosts.append(address[0])
+            self.broadcast_process = Process(target = self.broadcast, args = (client,len(self.hosts)))
             self.broadcast_process.start()
             print("[+]user connected :: addr : {} hostname : {}".format(address[0],socket.gethostbyaddr(address[0])[0]))
-            self.hosts.append(address[0])
             print("[!]Users are now {}/{}".format(len(self.hosts),self.max_hosts))
 
 
     #recieve and send the messages
-    def broadcast(self,client):
+    def broadcast(self,client,client_pos):
         while True:
             if len(self.hosts) >= 1:
                 with open("last_msg.data.Blue","r") as f:
-                    client.send(bytes(f.read(),'utf-8'))
-                    f.close()
+                    try:
+                        client.send(bytes(f.read(),'utf-8'))
+                        f.close()
+                    except:
+                        #exit if the user is dsconnected and remove a
+                        self.hosts.pop(client_pos-1)
+                        print("[x]Host number {} as left the chat".format(client_pos))
+                        exit(1)
 
                 try:
                     message = client.recv(1024)
