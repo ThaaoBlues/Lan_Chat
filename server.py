@@ -7,7 +7,12 @@ from multiprocessing import Process, Manager
 class chat_server():
     
     #initialize variables and files
-    def __init__(self,port,max_hosts):
+    def __init__(self,port,max_hosts, get_msg):
+        
+        #recv_function is a parameter for a custom message displaying function, put "" if you want to let the default function.
+        self.recv_function = get_msg
+        
+        
         self.port = port
         self.max_hosts = max_hosts
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -38,7 +43,7 @@ class chat_server():
             self.broadcast_process.start()
             print("[+]user connected :: addr : {} hostname : {}".format(address[0],socket.gethostbyaddr(address[0])[0]))
             print("[!]Users are now {}/{}".format(self.hosts_number.value,self.max_hosts))
-
+   
 
     #recieve and send the messages
     def broadcast(self,client,client_pos):
@@ -54,19 +59,30 @@ class chat_server():
                         self.hosts_number.value -= 1
                         print("[!]Users are now {}/{}".format(self.hosts_number.value,self.max_hosts))
                         exit(1)
-                        
+             
 
                 try:
                     message = client.recv(1024)
-                    if message != "":
-                       if "[REFRESH FLAG]" in message.decode('utf-8'):
-                            print(message.decode('utf-8'))
-
-                        else :
-                            print(message.decode('utf-8'))
-                            with open("last_msg.data.Blue","a") as f:
+                    
+                    #handle custom message displaying function
+                    if self.recv_function and self.recv_function != "" and self.recv_function != None:
+                        with open("last_msg.data.Blue","a") as f:
+                            if "[REFRESH FLAG]" in message.decode('utf-8'):
+                                print(message.decode('utf-8'))
+                            else:
                                 f.write("{}\n".format(message.decode('utf-8')))
                                 f.close()
+
+                        result = getattr(sys.modules[__name__],self.recv_function)(message=message)
+                    else:
+                        if message != "":
+                            if "[REFRESH FLAG]" in message.decode('utf-8'):
+                                print(message.decode('utf-8'))
+                            else :
+                                print(message.decode('utf-8'))
+                                with open("last_msg.data.Blue","a") as f:
+                                    f.write("{}\n".format(message.decode('utf-8')))
+                                    f.close()
                     
                 except:
                     pass
@@ -76,4 +92,3 @@ class chat_server():
         self.broadcast_process.terminate()
         self.accept_process.terminate()
         os.remove("last_msg.data.Blue")
-     
