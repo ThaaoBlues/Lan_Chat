@@ -1,3 +1,5 @@
+import chat_client
+
 def display(message):
     if str(message) != "":
         #Windows and Linux have differents syystem commands, this is making me often loose some hair
