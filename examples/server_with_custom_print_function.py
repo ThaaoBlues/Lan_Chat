@@ -1,3 +1,6 @@
+import chat_server
+
+
 def print_message_function(message):
     print(message)
 
