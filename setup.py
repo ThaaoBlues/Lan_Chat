@@ -4,9 +4,9 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="example-pkg-ThaaoBlues",
+    name="lan_chat-pkg-ThaaoBlues",
     version="0.0.2",
-    author="Example Author",
+    author="ThaaoBlues",
     author_email="thaaoblues81@gmail.com",
     description="The easiest to configure python chat package",
     long_description=long_description,
