@@ -3,6 +3,7 @@ import os
 import time
 import sys
 from multiprocessing import Process, Manager
+from requests import get
 
 class chat_server():
     
@@ -26,10 +27,11 @@ class chat_server():
     #starts the server and launch the process to accept connections
     def start_server(self):
         self.hosts_number = Manager().Value('i',0)
-        self.sock.bind(('127.0.0.1', self.port))
+        self.sock.bind(('', self.port))
         self.accept_process = Process(target = self.accept_hosts)
         self.accept_process.start()
-        print("Server is now online.")
+        print("[+]Server is now online.")
+        print("[+]Listening on : (Private IP) {} || (Public IP) {}".format(socket.gethostbyname_ex(socket.gethostname())[2],get('https://api.ipify.org').text))
         self.accept_process.join()
         
 
