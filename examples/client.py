@@ -4,7 +4,7 @@ import time
 if __name__ == "__main__":
 
     #init chat client
-    client1 = chat_client(port = 8835, username = "ThaaoBlues",server_ip = input("server IP address : "), get_msg = "")
+    client1 = chat_client(port = 8835, username = input("Choose an username : "),server_ip = input("server IP address : "), get_msg = "")
 
     #connect to the server
     client1.connect_to_chat()
