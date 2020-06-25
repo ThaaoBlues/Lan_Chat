@@ -1,4 +1,4 @@
-from lan_chat import chat_client
+from lan_chat.chat_client import chat_client
 
 def display(message):
     if str(message) != "":
