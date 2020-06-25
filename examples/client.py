@@ -1,4 +1,5 @@
 from lan_chat.chat_client import chat_client
+import time
 
 if __name__ == "__main__":
 
