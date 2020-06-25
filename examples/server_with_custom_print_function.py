@@ -1,4 +1,4 @@
-from lan_chat import chat_server
+from lan_chat.chat_server import chat_server
 
 
 def print_message_function(message):
