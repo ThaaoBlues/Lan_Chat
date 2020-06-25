@@ -43,7 +43,7 @@ class chat_server():
             self.hosts_number.value += 1
             self.broadcast_process = Process(target = self.broadcast, args = (client,self.hosts_number))
             self.broadcast_process.start()
-            print("[+]user connected :: addr : {} hostname : {}".format(address[0],socket.gethostbyaddr(address[0])[0]))
+            print("[+]user connected :: addr : {}".format(address[0])
             print("[!]Users are now {}/{}".format(self.hosts_number.value,self.max_hosts))
    
 
