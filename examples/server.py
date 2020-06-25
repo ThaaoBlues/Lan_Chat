@@ -1,4 +1,4 @@
-from lan_chat import chat_server
+from lan_chat.chat_server import chat_server
 
 if __name__ == "__main__":
     #create an object server, specify the port to use and the maximum number of hosts.
