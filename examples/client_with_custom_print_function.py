@@ -1,4 +1,5 @@
 from lan_chat.chat_client import chat_client
+import time
 
 def display(message):
     if str(message) != "":
@@ -15,7 +16,7 @@ def display(message):
 if __name__ == "__main__":
 
     #init chat client
-    client1 = chat_client(port = 8835, username = "ThaaoBlues", server_ip = "127.0.0.1", get_msg = "display")
+    client1 = chat_client(port = 8835, username = "ThaaoBlues", server_ip = input("server IP address : "), get_msg = "display")
 
     #connect to the server
     client1.connect_to_chat()
